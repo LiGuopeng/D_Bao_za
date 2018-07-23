@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    *{
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    html,body{
+        overflow: hidden;
+    }
+    #box{
+        width: 700px;
+        height: 400px;
+        background: url("1.jpg") no-repeat;
+        margin: 100px auto;
+        position: relative;
+    }
+    #box span{
+        position: absolute;
+        background:url("0.jpg")no-repeat;
+    }
+    </style>
+</head>
+<body>
+    <div id="box"></div>
+</body>
+<script>
+    function rnd(n,m) { 
+        return parseInt(Math.random()*(m-n)+n)
+     }
+    window.onload=function(){
+        var oBox=document.getElementById('box');
+        var R=4;
+        var C=7;
+        
+        for(var r=0;r<R;r++){
+            for(var c=0;c<C;c++){
+                var oSpan=document.createElement('span');
+                oSpan.style.width=oBox.offsetWidth/C+'px';
+                oSpan.style.height=oBox.offsetHeight/R+'px';
+                oBox.appendChild(oSpan);
+                oSpan.style.left=c*oSpan.offsetWidth+'px';
+                oSpan.style.top=r*oSpan.offsetHeight+'px';
+                oSpan.style.backgroundPosition=`-${c*oSpan.offsetWidth}px -${r*oSpan.offsetHeight}px`;
+            }
+        }
+        var iNow=0;
+        oBox.onclick=function(){
+            iNow++;
+            var aSpan=oBox.children;
+            for(i=0;i<aSpan.length;i++){
+                aSpan[i].style.transition="1s all ease";
+                var x=aSpan[i].offsetLeft+aSpan[i].offsetWidth/2-oBox.offsetWidth/2;
+                var y=aSpan[i].offsetTop+aSpan[i].offsetHeight/2-oBox.offsetHeight/2;
+                aSpan[i].style.transform=`translate3d(${x}px,${y}px,100px) rotateX(${rnd(0,180)}deg) rotateY(${rnd(0,180)}deg)`;
+                aSpan[i].style.opacity=0;
+            }
+            aSpan[0].addEventListener('transitionend',function(){
+                for(var i=0;i<aSpan.length;i++){
+                    aSpan[i].style.transition=null;
+                    aSpan[i].style.opacity=1;
+                    aSpan[i].style.transform='translate3d(0,0,0) rotateX(0deg) rotateY(0deg)';
+                    oBox.style.backgroundImage=`url(${(iNow+1)%3}.jpg)`;
+                    aSpan[i].style.backgroundImage=`url(${(iNow)%3}.jpg)`;
+                }
+            },false)
+        };
+       
+    };
+</script>
+</html>
